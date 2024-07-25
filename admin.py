@@ -141,7 +141,7 @@ def view_access_logs(user_type):
         if user_type == "verified":
             cursor.execute("SELECT * FROM Logs WHERE guest_id IS NULL")
         else:
-            cursor.execute("SELECT * FROM Logs WHERE guest_id IS NOT NULL")
+            cursor.execute("SELECT * FROM Guests WHERE guest_id IS NOT NULL")
         logs = cursor.fetchall()
 
     logs_window = tk.Toplevel()
