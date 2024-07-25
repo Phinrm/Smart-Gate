@@ -66,8 +66,15 @@ def log_access(user, action, accessories='', vehicle_id=None):
             INSERT INTO Logs (timestamp, student_id, staff_id, user_name, email, action, gate_id, accessories, vehicle_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            timestamp, user.get('id') if user.get('type') == 'student' else None, user.get('id') if user.get('type') == 'staff' else None, 
-            user.get('name'), user.get('email'), action, 1, accessories, vehicle_id
+            timestamp, 
+            user.get('id') if user.get('type') == 'student' else None, 
+            user.get('id') if user.get('type') == 'staff' else None, 
+            user.get('name'), 
+            user.get('email', ''),  # Provide default empty string for email if not present
+            action, 
+            1, 
+            accessories, 
+            vehicle_id
         ))
         conn.commit()
 
@@ -232,7 +239,7 @@ def access_as_guest():
         access_window = tk.Toplevel()
         access_window.title("Grant Access")
         tk.Label(access_window, text="Do you want to grant access?").pack()
-        tk.Button(access_window, text="Yes", command=lambda: (grant_access(guest_details, 'guest'), access_window.destroy())).pack()
+        tk.Button(access_window, text="Yes", command=lambda: (log_access(guest_details, 'enter'), messagebox.showinfo("Access Granted", f"Access Granted to {guest_details['name']}. The gate is now open."), access_window.destroy())).pack()
         tk.Button(access_window, text="No", command=access_window.destroy).pack()
 
     login_window = tk.Toplevel()
